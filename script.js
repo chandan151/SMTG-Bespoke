@@ -1,11 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
     const gridItems = document.querySelectorAll(".grid-item");
 
-    function changeBackground() {
-        gridItems.forEach((item) => {
-            const randomColor = getRandomColor();
-            item.style.background = randomColor;
-        });
+    function changeBackground(item) {
+        const isGradient = item.style.background.includes("linear-gradient");
+        if (isGradient) {
+            // Switch from gradient to solid color
+            item.style.background = getRandomColor();
+        } else {
+            // Switch from solid color to gradient
+            item.style.background = getRandomGradient();
+        }
     }
 
     function getRandomColor() {
@@ -17,6 +21,18 @@ document.addEventListener("DOMContentLoaded", function () {
         return color;
     }
 
-    // Change background every 5 seconds
-    setInterval(changeBackground, 5000);
+    function getRandomGradient() {
+        return `linear-gradient(${Math.random() * 360}deg, ${getRandomColor()}, ${getRandomColor()})`;
+    }
+
+    function runChangeBackground(item) {
+        setInterval(() => {
+            changeBackground(item);
+        }, Math.floor(Math.random() * (6000 - 2000 + 1)) + 2000);
+    }
+
+    // Run changeBackground for each grid item separately
+    gridItems.forEach((item) => {
+        runChangeBackground(item);
+    });
 });
